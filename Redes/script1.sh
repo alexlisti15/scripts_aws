@@ -43,6 +43,7 @@ EC2_ID=$(aws ec2 run-instances \
   --image-id ami-0360c520857e3138f \
   --instance-type t3.micro \
   --subnet-id "$SUB_ID" \
+  --security-group-ids $SG_ID \
   --key-name vockey \
   --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MiEC2}]' \
   --associate-public-ip-address \
