@@ -31,32 +31,29 @@
     --vpc-id $VPC_ID \
     --query GroupId --output text )
 
-    echo $SG_ID
+    echo "Security Group ID: $SG_ID"
 
-    #reglas grupo de seguridad
-    aws ec2 authorize-security-group-ingress \
-    --group-id $SG_ID \
-    --protocol tcp \
-    --port 22 \
-    --cidr 0.0.0.0/0 > /dev/null
+# Autorizar el tráfico SSH (puerto 22) desde cualquier IP
+aws ec2 authorize-security-group-ingress \
+  --group-id "$SG_ID" \
+  --ip-permissions '[{"IpProtocol": "tcp", "FromPort": 22, "ToPort": 22, "IpRanges": [{"CidrIp": "0.0.0.0/0", "Description": "All"}]}]'
 
+# Crear una instancia EC2 en la subred especificada
+EC2_ID=$(aws ec2 run-instances \
+  --image-id ami-0360c520857e3138f \
+  --instance-type t3.micro \
+  --subnet-id "$SUB_ID" \
+  --key-name vockey \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MiEC2}]' \
+  --associate-public-ip-address \
+  --query 'Instances[0].InstanceId' \
+  --output text)
 
+# Esperar unos segundos para que la instancia se inicialice
+sleep 15
 
-    #Crear Ec2 y ponerlo en la subred 
-    EC2_ID=$(aws ec2 run-instances \
-    --image-id ami-0360c520857e3138f \
-    --instance-type t3.micro \
-    --subnet-id $SUB_ID \
-    --key-name vockey \
-    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MiEC2}]' \
-    --associate-public-ip-address \
-    --query Instances.InstanceId --output text )
-
-
-
-    sleep 15
-    echo $EC2_ID
-
+# Mostrar el ID de la instancia creada
+echo "EC2 Instance ID: $EC2_ID"
         
 
     
