@@ -1,8 +1,8 @@
 
     #Creo la vpc y devuelvo su id
     VPC_ID=$(aws ec2 create-vpc \
-        --cidr-block 192.168.1.0/24 \
-        --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=VPCALEX}]' \
+        --cidr-block 192.168.0.0/24 \
+        --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=VPCALEX2}]' \
         --query Vpc.VpcId --output text) 
 
     #Muestro el id de la vpc
@@ -14,8 +14,8 @@
 
     SUB_ID=$(aws ec2 create-subnet \
         --vpc-id $VPC_ID \
-        --cidr-block 192.168.1.0/28 \
-        --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Subred1-Alex}]' \
+        --cidr-block 192.168.0.1/28 \
+        --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Subred2-Alex}]' \
         --query Subnet.SubnetId --output text)
 
         echo $SUB_ID 
@@ -26,7 +26,7 @@
 
     #Crear grupo Security Group 
     SG_ID=$(aws ec2 create-security-group \
-    --group-name sgmio \
+    --group-name sgmio2 \
     --description "Mi grupo de seguridad para abrir el puerto 22" \
     --vpc-id $VPC_ID \
     --query GroupId --output text )
@@ -45,10 +45,12 @@ EC2_ID=$(aws ec2 run-instances \
   --subnet-id "$SUB_ID" \
   --security-group-ids $SG_ID \
   --key-name vockey \
-  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MiEC2}]' \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=MiEC22}]' \
   --associate-public-ip-address \
   --query 'Instances[0].InstanceId' \
   --output text)
+
+
 
 # Esperar unos segundos para que la instancia se inicialice
 sleep 15
