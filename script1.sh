@@ -29,7 +29,7 @@
     --group-name sgmio \
     --description "Mi grupo de seguridad para abrir el puerto 22" \
     --vpc-id $VPC_ID \
-    --output text )
+    --query GroupId --output text )
 
     echo $SG_ID
 
@@ -38,7 +38,7 @@
     --group-id $SG_ID \
     --protocol tcp \
     --port 22 \
-    --cidr 0.0.0.0/0
+    --cidr 0.0.0.0/0 > /dev/null
 
 
 
