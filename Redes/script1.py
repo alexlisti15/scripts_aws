@@ -34,3 +34,28 @@ def crear_vpc():
 if __name__ == "__main__":
     vpc_id = crear_vpc()
     print(f" Proceso completado. ID de la VPC: {vpc_id}")
+
+def crear_subnet(vpc_id):
+   # Crear Cliente de EC2
+    ec2 = boto3.client('ec2')
+
+    # Crear la Subnet
+    subnet = ec2.create_subnet(
+        CidrBlock='172.16.1.0/24',
+        VpcId=vpc_id
+    )
+    subnet_id = subnet['Subnet']['SubnetId']
+    print(f" Subnet creada con ID: {subnet_id}")
+
+    # Etiquetar la Subnet (opcional)
+    ec2.create_tags(
+        Resources=[subnet_id],
+        Tags=[{'Key': 'Name', 'Value': 'MiSubnetAGM'}]
+    )
+
+    print(" Etiqueta 'MiSubnetAGM' asignada.")
+    return subnet_id
+
+    if __name__ == "__main__":
+        subnet_id = crear_subnet(vpc_id)
+        print(f" Proceso completado. ID de la Subnet: {subnet_id}")
